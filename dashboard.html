@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Desk · PAPER memecoin terminal</title>
+<style>
+:root{--bg:#07080b;--p1:#0e1015;--p2:#13161d;--p3:#1a1e27;--bd:#1f2430;--tx:#e6e8ee;--mu:#7c8394;--dim:#4c5262;
+--gr:#16c784;--rd:#f0465a;--yl:#f5b941;--bl:#4c8dff;--pk:#ff5fb0;--pu:#9b7bff;--gray:#9aa1ad}
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--bg);color:var(--tx);
+font:13px/1.35 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.mono,.num{font-family:ui-monospace,"JetBrains Mono",SFMono-Regular,Menlo,Consolas,monospace;font-variant-numeric:tabular-nums}
+a{color:inherit;text-decoration:none}
+.up{color:var(--gr)}.dn{color:var(--rd)}.mu{color:var(--mu)}.dim{color:var(--dim)}
+#app{display:grid;grid-template-columns:minmax(0,1fr) 380px;grid-template-rows:auto minmax(0,1fr);height:100vh}
+header{grid-column:1/3;display:flex;align-items:center;gap:18px;padding:8px 14px;background:var(--p1);border-bottom:1px solid var(--bd);overflow-x:auto;white-space:nowrap}
+.logo{font-weight:800;letter-spacing:.3px;font-size:15px;display:flex;align-items:center;gap:8px}
+.logo i{width:20px;height:20px;border-radius:6px;background:linear-gradient(135deg,#4c8dff,#9b7bff);display:inline-block}
+.badge{font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;letter-spacing:.5px}
+.b-paper{background:#3a2a05;color:var(--yl);border:1px solid #6b4d0a}
+.kpi{display:flex;flex-direction:column;gap:1px}.kpi .l{font-size:10px;color:var(--mu);text-transform:uppercase;letter-spacing:.6px}
+.kpi .v{font-size:14px;font-weight:600}.kpi .v.big{font-size:18px}
+.sep{width:1px;height:28px;background:var(--bd)}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:5px;box-shadow:0 0 8px currentColor}
+main{overflow:auto;padding:10px;display:flex;flex-direction:column;gap:10px;min-width:0}
+aside{border-left:1px solid var(--bd);background:var(--p1);display:flex;flex-direction:column;min-height:0}
+.card{background:var(--p1);border:1px solid var(--bd);border-radius:10px;min-width:0}
+.ch{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--bd);font-weight:600;font-size:12.5px}
+.ch .cnt{background:var(--p3);color:var(--mu);border-radius:10px;padding:0 7px;font-size:11px;font-weight:600}
+.ch .r{margin-left:auto;font-weight:400;color:var(--mu);font-size:11px}
+.row1{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr) minmax(0,1fr);gap:10px}
+.cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.col .list{height:560px;overflow:auto}
+.tok{display:grid;grid-template-columns:42px minmax(0,1fr) auto;gap:9px;padding:9px 11px;border-bottom:1px solid #161a22;cursor:default}
+.tok:hover{background:var(--p2)}
+.av{width:42px;height:42px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;color:#fff;overflow:hidden;position:relative}
+.av img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.t1{display:flex;align-items:baseline;gap:6px;min-width:0}.t1 b{font-size:13.5px}.t1 .nm{color:var(--mu);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px}
+.t2,.t3{display:flex;gap:4px 8px;flex-wrap:wrap;font-size:11px;color:var(--mu);margin-top:3px}.t2 span b{color:var(--tx);font-weight:500}
+.chip{font-size:10px;padding:0 5px;line-height:16px;border-radius:4px;background:var(--p3);color:var(--gray);white-space:nowrap}
+.c-g{background:rgba(22,199,132,.12);color:var(--gr)}.c-r{background:rgba(240,70,90,.13);color:var(--rd)}
+.c-y{background:rgba(245,185,65,.13);color:var(--yl)}.c-b{background:rgba(76,141,255,.14);color:var(--bl)}.c-p{background:rgba(255,95,176,.13);color:var(--pk)}
+.rt{text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.rt .mc{font-size:12px;color:var(--mu)}.rt .mc b{color:var(--tx);font-size:13px}
+.lnk{display:flex;gap:4px;margin-top:4px}.lnk a{font-size:10px;color:var(--mu);border:1px solid var(--bd);border-radius:4px;padding:0 5px}
+.lnk a:hover{color:var(--tx);border-color:var(--mu)}
+.verdict{font-weight:700;font-size:10.5px;padding:2px 7px;border-radius:4px;letter-spacing:.4px}
+.v-APPROVED{background:rgba(22,199,132,.15);color:var(--gr)}.v-WAIT{background:rgba(245,185,65,.15);color:var(--yl)}.v-BLOCKED{background:rgba(240,70,90,.15);color:var(--rd)}
+table{width:100%;border-collapse:collapse;font-size:12px}th{font-weight:500;color:var(--mu);text-align:left;padding:6px 10px;border-bottom:1px solid var(--bd);font-size:11px;text-transform:uppercase;letter-spacing:.4px;position:sticky;top:0;background:var(--p1)}
+td{padding:6px 10px;border-bottom:1px solid #161a22;white-space:nowrap}td.wrap{white-space:normal;color:var(--mu);min-width:220px}
+.tbl{max-height:340px;overflow:auto}
+.stats{padding:10px 12px;display:grid;grid-template-columns:1fr 1fr;gap:8px 14px}
+.stat .l{font-size:10.5px;color:var(--mu);text-transform:uppercase;letter-spacing:.5px}.stat .v{font-size:16px;font-weight:600}
+.bar{display:flex;height:6px;border-radius:3px;overflow:hidden;background:var(--p3);margin-top:4px}
+.reasons{padding:2px 12px 10px}.reasons div{display:flex;justify-content:space-between;gap:8px;font-size:11.5px;padding:3px 0;border-bottom:1px dashed #1b1f29}
+.reasons div span:first-child{color:var(--gray);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.health{padding:8px 12px 12px;display:flex;flex-direction:column;gap:5px;font-size:11.5px}
+.health div{display:flex;justify-content:space-between;gap:8px}
+#eqsvg{width:100%;height:220px}#eqsvg svg{display:block}
+details.deb{border-bottom:1px solid #161a22}details.deb summary{list-style:none;display:flex;align-items:center;gap:10px;padding:8px 12px;cursor:pointer}
+details.deb summary::-webkit-details-marker{display:none}details.deb[open] summary{background:var(--p2)}
+.deb .body{padding:6px 12px 12px 12px;background:#0b0d12}
+.msg{display:flex;gap:8px;padding:5px 0}.msg .ra{width:24px;height:24px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff}
+.msg .bb{background:var(--p2);border:1px solid var(--bd);border-radius:4px 10px 10px 10px;padding:5px 9px;min-width:0;flex:1}
+.msg .hd{display:flex;gap:6px;align-items:baseline;font-size:11.5px}.msg .hd .tm{margin-left:auto;color:var(--dim);font-size:10.5px}
+.msg .tx{font-size:12.5px;white-space:pre-wrap;word-break:break-word;margin-top:1px}
+#chat{flex:1;overflow:auto;padding:4px 10px 10px}
+.legend{display:flex;gap:8px;flex-wrap:wrap;padding:6px 12px;border-bottom:1px solid var(--bd);font-size:11px;font-weight:600}
+.filt{display:flex;gap:4px}.filt button{background:var(--p3);color:var(--mu);border:1px solid var(--bd);border-radius:5px;font-size:10.5px;padding:1px 7px;cursor:pointer}
+.filt button.on{color:var(--tx);border-color:var(--mu)}
+.prog{height:4px;background:var(--p3);border-radius:2px;margin-top:5px;overflow:hidden}.prog div{height:100%;background:linear-gradient(90deg,#9b7bff,#16c784)}
+.empty{padding:18px;color:var(--dim);text-align:center}
+.pill{font-size:10px;color:var(--mu)}
+.row2{display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-thumb{background:#262b37;border-radius:4px}::-webkit-scrollbar-track{background:transparent}
+@media (max-width:1100px){#app{grid-template-columns:1fr;height:auto}aside{height:70vh}main{overflow:visible}.row1,.cols,.row2{grid-template-columns:1fr}}
+#pubbar{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:8px 14px;background:#10151c;border-bottom:1px solid #2a3344;font:12.5px/1.35 Inter,ui-sans-serif,system-ui,sans-serif;color:#e6e8ee}#pubbar.ok{background:#0d1c14;border-bottom-color:#1a5c38}#pubbar.stale{background:#2a1216;border-bottom-color:#f0465a;color:#ffd0d4}#pubbar .tag{font-weight:800;letter-spacing:.4px;font-size:10px;padding:2px 6px;border-radius:4px}#pubbar .tag.ok{background:#163d28;color:#16c784}#pubbar .tag.stale{background:#5a1520;color:#ff8a96}#app{padding-top:42px}
+</style></head><body><div id="pubbar" role="status">Lade Stand…</div><div id="app">
+<header id="top"></header>
+<main id="main"></main>
+<aside><div class="ch">Group chat <span class="cnt" id="chatcnt"></span><span class="r">8 bots · live feed</span></div>
+<div class="legend" id="legend"></div><div id="chat"></div></aside>
+</div>
+<script id="data" type="application/json">null</script>
+<script>
+const ROLE={Scout:"#4c8dff","Live Scout":"#ff7a45",News:"#f5b941",Wallets:"#2dd4bf",Sentiment:"#ff5fb0",Charts:"#16c784",Skeptic:"#9aa1ad",Chief:"#f3f4f6",Desk:"#9b7bff"};
+const ROLE_TX={Chief:"#111"};
+let D=JSON.parse(document.getElementById("data").textContent||"null");
+const UI=JSON.parse(sessionStorage.getItem("deskUI")||'{"open":{},"scanF":"all","scroll":{}}');
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const sub=n=>String(n).split("").map(d=>"₀₁₂₃₄₅₆₇₈₉"[d]).join("");
+function px(v){if(v==null||isNaN(v))return"–";v=+v;if(v===0)return"$0";if(v>=1000)return"$"+v.toLocaleString("en-US",{maximumFractionDigits:0});
+ if(v>=1)return"$"+v.toFixed(v>=100?2:3);if(v>=0.001)return"$"+v.toFixed(5).replace(/0+$/,"");
+ const s=v.toExponential(3);const [m,e]=s.split("e");const z=-parseInt(e)-1;return"$0.0"+sub(z)+m.replace(".","").slice(0,4);}
+function big(v){if(v==null||isNaN(v))return"–";v=+v;const a=Math.abs(v);return(v<0?"-":"")+"$"+(a>=1e9?(a/1e9).toFixed(2)+"B":a>=1e6?(a/1e6).toFixed(2)+"M":a>=1e3?(a/1e3).toFixed(1)+"K":a.toFixed(0));}
+const usd=(v,d=2)=>v==null?"–":(v<0?"-$":"$")+Math.abs(v).toFixed(d);
+const sgn=(v,d=2)=>v==null?"–":(v>=0?"+":"-")+"$"+Math.abs(v).toFixed(d);
+const pct=(v,d=1)=>v==null||isNaN(v)?"–":(v>=0?"+":"")+(+v).toFixed(d)+"%";
+const cls=v=>v>0?"up":v<0?"dn":"mu";
+function age(min){if(min==null)return"–";if(min<60)return Math.round(min)+"m";if(min<1440)return(min/60).toFixed(min<600?1:0)+"h";if(min<525600)return Math.round(min/1440)+"d";return(min/525600).toFixed(1)+"y";}
+const ago=t=>t?age((Date.now()/1000-t)/60):"–";
+const tm=t=>t?new Date(t*1000).toLocaleTimeString("de-AT",{timeZone:"Europe/Vienna",hour:"2-digit",minute:"2-digit",second:"2-digit"}):"–";
+const dt=t=>t?new Date(t*1000).toLocaleString("de-AT",{timeZone:"Europe/Vienna",day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}):"–";
+function hue(s){let h=0;for(const c of String(s))h=(h*31+c.charCodeAt(0))%360;return h;}
+function avatar(sym,mint,logo){const h=hue(mint||sym);return`<div class="av" style="background:linear-gradient(135deg,hsl(${h} 65% 42%),hsl(${(h+50)%360} 70% 28%))">${esc((sym||"?").slice(0,1).toUpperCase())}${logo?`<img src="${esc(logo)}" loading="lazy" onerror="this.remove()">`:""}</div>`;}
+const links=(pool,mint)=>`<div class="lnk"><a target=_blank href="https://dexscreener.com/solana/${pool||mint}">DEX</a><a target=_blank href="https://solscan.io/token/${mint}">SOL</a><a target=_blank href="https://rugcheck.xyz/tokens/${mint}">RUG</a></div>`;
+function safetyChips(s,holders){if(!s)return`<span class="chip">safety unchecked</span>`;const o=[];
+ o.push(`<span class="chip ${s.mint_auth?"c-r":"c-g"}">${s.mint_auth?"✕":"✓"} mint</span>`);
+ o.push(`<span class="chip ${s.freeze_auth?"c-r":"c-g"}">${s.freeze_auth?"✕":"✓"} freeze</span>`);
+ o.push(s.top10==null?`<span class="chip">top10 n/a</span>`:`<span class="chip ${s.top10>50?"c-r":s.top10>35?"c-y":"c-g"}">top10 ${s.top10.toFixed(0)}%</span>`);
+ o.push(`<span class="chip ${s.lp_locked>=90?"c-g":s.lp_locked>0?"c-y":"c-r"}">LP ${(s.lp_locked||0).toFixed(0)}%</span>`);
+ if(holders)o.push(`<span class="chip">👥 ${holders.toLocaleString()}</span>`);return o.join("");}
+function walletChips(r){const w=r.wallets,o=[];if(r.early)o.push(`<span class="chip c-p">EARLY · curve ${r.progress!=null?Math.round(r.progress*100)+"%":"?"}</span>`);if(!w)return o.join("");
+ if(w.smart_n)o.push(`<span class="chip c-g">🧠 smart ${w.smart_n} · ${big(w.smart_usd)}</span>`);
+ if(w.dev_pct!=null)o.push(`<span class="chip ${w.dev_pct>10?"c-r":w.dev_pct>3?"c-y":""}">dev ${w.dev_pct.toFixed(1)}%</span>`);
+ if(w.dev_sold)o.push(`<span class="chip c-r">dev sold ${big(w.dev_sold)}</span>`);
+ if(w.insiders)o.push(`<span class="chip ${(w.insider_pct||0)>10?"c-r":"c-y"}">insiders ${w.insiders}${w.insider_pct?" · "+w.insider_pct.toFixed(0)+"%":""}</span>`);
+ if(w.launch_visible){o.push(`<span class="chip ${w.bundle_share>0.25?"c-r":w.bundle_share>0.1?"c-y":""}">bundle ${Math.round(w.bundle_share*100)}%</span>`);o.push(`<span class="chip ${w.sniper_share>0.3?"c-r":""}">snipers ${w.sniper_wallets}</span>`);}
+ if(w.creator_tokens)o.push(`<span class="chip ${w.creator_tokens>=5?"c-r":""}">dev tokens ${w.creator_tokens}</span>`);
+ if(w.large_n)o.push(`<span class="chip c-b">🐋 ${w.large_n} large buys</span>`);return o.join("");}
+function radarCard(r){const n=(r.buys5||0)+(r.sells5||0),prog=r.progress==null?null:Math.round(r.progress*100);
+ return`<div class="tok">${avatar(r.symbol,r.mint,r.logo)}<div style="min-width:0"><div class="t1"><b>${esc(r.symbol)}</b><span class="nm">${esc(r.name||"")}</span>${r.status==="flagged"?'<span class="chip c-p">flagged</span>':""}</div>
+ <div class="t2 num"><span class="${(Date.now()/1000-r.created)<600?"up":""}">⏱ ${age((Date.now()/1000-r.created)/60)}</span><span>${px(r.price)}</span><span>5m <span class="up">${r.buys5||0}</span>/<span class="dn">${r.sells5||0}</span></span><span>V5m <b>${big(r.vol5)}</b></span><span class="${cls(r.chg5)}">${pct(r.chg5)}</span>${r.socials?`<span>🔗${r.socials}</span>`:'<span class="dim">no socials</span>'}</div>
+ ${r.dex==="pumpfun"&&prog!=null?`<div class="prog"><div style="width:${prog}%"></div></div><div class="t3"><span>curve ~${prog}% (est.)</span>${r.flag_why?`<span class="chip c-p" title="${esc(r.flag_why)}">${esc(r.flag_why.split(":")[0])}</span>`:""}</div>`:`<div class="t3"><span class="chip c-g">migrated → ${esc(r.dex||"?")}</span></div>`}
+ <div class="lnk"><a target=_blank href="https://dexscreener.com/solana/${r.pair||r.mint}">DEX</a><a target=_blank href="https://pump.fun/coin/${r.mint}">PUMP</a><a target=_blank href="https://rugcheck.xyz/tokens/${r.mint}">RUG</a></div></div>
+ <div class="rt"><div class="mc">MC <b>${big(r.mcap)}</b></div><div class="pill">${n} tx/5m</div></div></div>`;}
+function statusChip(st){if(!st)return"";if(st.startsWith("flagged"))return`<span class="chip c-b">${esc(st)}</span>`;
+ if(st.startsWith("filtered"))return`<span class="chip" title="${esc(st)}">${esc(st.replace("filtered: ","").slice(0,34))}</span>`;
+ if(st.startsWith("no spike"))return`<span class="chip">${esc(st)}</span>`;if(st==="holding")return`<span class="chip c-g">holding</span>`;return`<span class="chip c-y">${esc(st)}</span>`;}
+function tokCard(r,mode){const tx=(r.buys_h1??r.buys??0),sx=(r.sells_h1??r.sells??0);
+ const fdv=r.fdv_usd??r.fdv,liq=r.liquidity_usd??r.liq,price=r.price_usd??r.price;
+ if(r.legacy)return`<div class="tok">${avatar(r.symbol,r.mint)}<div><div class="t1"><b>${esc(r.symbol)}</b><span class="nm">cycle ${r.cycle} · ${dt(r.t)}</span></div><div class="t2"><span class="dim">discussed before metrics were recorded</span></div>${links(null,r.mint)}</div><div class="rt"><span class="verdict v-${r.verdict}">${r.verdict||"?"}</span></div></div>`;
+ const hype=r.sentiment?`<span class="chip c-p">hype ${r.sentiment.score}</span>`:"";
+ const spike=r.spike?`<span class="chip c-b">vol ${(+r.spike).toFixed(1)}x</span>`:"";
+ const cat=r.news?(r.news.real_catalyst?`<span class="chip c-g">catalyst</span>`:r.news.paid_only?`<span class="chip c-y">paid promo</span>`:`<span class="chip">no catalyst</span>`):"";
+ const rr=r.chart?`<span class="chip ${r.chart.rr>=2?"c-g":"c-r"}">R:R ${(+r.chart.rr).toFixed(1)}</span>`:(mode==="dec"?`<span class="chip c-r">no chart</span>`:"");
+ let right=`<div class="mc">MC <b>${big(fdv)}</b></div><div class="num ${cls(r.chg_h1)}" style="font-size:12px">${pct(r.chg_h1)} 1h</div>`;
+ if(mode==="dec")right=`<span class="verdict v-${r.verdict}">${r.verdict||"?"}</span>`+right;
+ return`<div class="tok">${avatar(r.symbol,r.mint,r.logo)}<div style="min-width:0"><div class="t1"><b>${esc(r.symbol)}</b><span class="nm">${esc((r.name||"").replace(/\s*\/.*$/,"")!==r.symbol?(r.name||""):"")}</span><span class="chip">${esc(r.dex||"")}</span>${r.graduated?`<span class="chip c-p">grad</span>`:""}</div>
+ <div class="t2 num"><span class="${(r.age_min??999)<60?"up":""}">⏱ ${age(r.age_min)}</span><span>${px(price)}</span><span>L <b>${big(liq)}</b></span><span>V1h <b>${big(r.vol_h1)}</b></span><span class="${cls(r.chg_m5)}">5m ${pct(r.chg_m5)}</span><span><span class="up">${tx}</span>/<span class="dn">${sx}</span></span></div>
+ <div class="t3">${mode==="scan"?statusChip(r.status)+spike:spike+hype+cat+rr}${mode!=="scan"?safetyChips(r.safety,r.holders):""}${mode!=="scan"?walletChips(r):""}</div>
+ ${mode==="dec"&&r.action?`<div class="t3"><span class="mu">Chief:</span> <span style="color:${r.action.startsWith("BOUGHT")?"var(--gr)":"var(--gray)"}">${esc(r.action)}</span>${r.hard&&r.hard.length?` <span class="dn" title="${esc(r.hard.join(" | "))}">⛔ ${esc(r.hard[0].slice(0,60))}</span>`:""}</div>`:""}
+ ${links(r.pool,r.mint)}</div><div class="rt">${right}<div class="pill">${mode==="scan"?esc(r.origin||""):tm(r.t)}</div></div></div>`;}
+function eqChart(W){const h=D.equity||[];W=Math.max(320,W||900);const H=220,P={l:46,r:12,t:12,b:22};
+ if(h.length<2)return`<div class="empty">equity curve appears after 2 cycles</div>`;
+ const ts=h.map(x=>x[0]),vs=h.map(x=>x[1]),s0=D.kpi.start_usd;let lo=Math.min(...vs,s0),hi=Math.max(...vs,s0);const pad=(hi-lo)*.15||s0*.01;lo-=pad;hi+=pad;
+ const X=t=>P.l+(t-ts[0])/((ts[ts.length-1]-ts[0])||1)*(W-P.l-P.r),Y=v=>P.t+(hi-v)/(hi-lo)*(H-P.t-P.b);
+ const pts=h.map(x=>X(x[0]).toFixed(1)+","+Y(x[1]).toFixed(1)).join(" ");const last=vs[vs.length-1],col=last>=s0?"#16c784":"#f0465a";
+ let g="";for(let i=0;i<=4;i++){const v=lo+(hi-lo)*i/4;g+=`<line x1="${P.l}" x2="${W-P.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="#1a1e27"/><text x="${P.l-6}" y="${Y(v)+3}" fill="#5c6373" font-size="10" text-anchor="end">$${v.toFixed(2)}</text>`;}
+ for(let i=0;i<=5;i++){const t=ts[0]+(ts[ts.length-1]-ts[0])*i/5;g+=`<text x="${X(t)}" y="${H-6}" fill="#5c6373" font-size="10" text-anchor="middle">${tm(t).slice(0,5)}</text>`;}
+ let marks="";for(const f of D.fills||[]){if(f.t<ts[0])continue;let i=ts.findIndex(t=>t>=f.t);let v;if(i<=0)v=vs[i<0?vs.length-1:0];else{const a=(f.t-ts[i-1])/((ts[i]-ts[i-1])||1);v=vs[i-1]+(vs[i]-vs[i-1])*a;}
+  marks+=`<g><circle cx="${X(f.t)}" cy="${Y(v)}" r="4.5" fill="${f.side==="BUY"?"#4c8dff":"#f5b941"}" stroke="#07080b" stroke-width="1.5"/><title>${f.side} ${esc(f.symbol)} ${usd(f.usd)} · ${esc(f.reason)}</title></g>`;}
+ return`<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}"><defs><linearGradient id="eg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="${col}" stop-opacity=".28"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></linearGradient></defs>${g}
+ <line x1="${P.l}" x2="${W-P.r}" y1="${Y(s0)}" y2="${Y(s0)}" stroke="#4c5262" stroke-dasharray="4 4"/><text x="${W-P.r}" y="${Y(s0)-4}" fill="#7c8394" font-size="10" text-anchor="end">start $${s0.toFixed(2)}</text>
+ <polygon points="${P.l},${H-P.b} ${pts} ${X(ts[ts.length-1])},${H-P.b}" fill="url(#eg)"/><polyline points="${pts}" fill="none" stroke="${col}" stroke-width="2" vector-effect="non-scaling-stroke"/>${marks}</svg>`;}
+function radarHTML(){const R=D.radar;const W=D.wallets||{top:[]};const now=Date.now()/1000;
+ const rows=(R&&R.rows)||[];const newp=rows.filter(r=>r.dex==="pumpfun"&&(r.progress??0)<0.5),fin=rows.filter(r=>r.dex==="pumpfun"&&(r.progress??0)>=0.5),mig=rows.filter(r=>r.dex&&r.dex!=="pumpfun");
+ const rs=(R&&R.stats)||{};const live=R&&R.livestreams;
+ const col=(title,list,note)=>`<div class="card col"><div class="ch">${title} <span class="cnt">${list.length}</span><span class="r">${note}</span></div><div class="list" style="height:380px">${list.map(radarCard).join("")||'<div class="empty">nothing yet</div>'}</div></div>`;
+ const ev=(D.wallet_events||[]).map(e=>{const icon={smart_buy:"🧠",large_buy:"🐋",dev_sell:"⚠️",bundle:"📦"}[e.kind]||"•";const c={smart_buy:"up",dev_sell:"dn",bundle:"dn"}[e.kind]||"";
+  return`<div class="tok" style="grid-template-columns:24px minmax(0,1fr) auto"><div style="font-size:16px">${icon}</div><div style="min-width:0"><div class="t1"><b>${esc(e.symbol||"")}</b><span class="nm ${c}">${esc(e.text)}</span></div>${e.wallet?`<div class="lnk"><a target=_blank href="https://solscan.io/account/${e.wallet}">wallet</a><a target=_blank href="https://dexscreener.com/solana/${e.mint}">DEX</a></div>`:""}</div><div class="pill">${tm(e.t)}</div></div>`;}).join("")||'<div class="empty">no wallet events yet - filled from GeckoTerminal trades of analysed tokens</div>';
+ const wt=W.top.map(w=>`<tr><td class="mono"><a target=_blank href="https://solscan.io/account/${w.w}">${w.w.slice(0,4)}…${w.w.slice(-4)}</a></td><td>${w.smart?'<span class="chip c-g">smart</span>':'<span class="chip">learning</span>'}</td><td class="num">${w.hits}/${w.buys}</td><td class="mu">${esc((w.tokens||[]).join(", "))}</td><td class="num mu">${ago(w.last)}</td></tr>`).join("")||'<tr><td colspan=5 class="empty">no wallets learned yet</td></tr>';
+ return`<div class="card" style="padding:0"><div class="ch">🔴 Live Scout · pre-pump radar (pump.fun bonding curve)<span class="r">tracking ${R?R.tracked:0} new tokens · ${R?R.with_market_data:0} with market data · first seen median ${rs.first_sight_median_s!=null?Math.round(rs.first_sight_median_s)+"s":"–"} after creation · market data median ${rs.ds_listed_median_s!=null?Math.round(rs.ds_listed_median_s)+"s":"–"} · flags ${rs.flags??0} · updated ${R?ago(R.t):"–"} ago</span></div>
+ <div style="padding:6px 12px;font-size:11.5px;border-bottom:1px solid var(--bd)" class="mu"><span class="chip c-r">Live streams: unavailable</span> ${esc(live?live.why:"")} · sources: RugCheck new-token feed (5 s), DexScreener (10-60 s)</div>
+ <div class="cols" style="padding:10px">${col("New pairs",newp,"curve < 50%")}${col("Final stretch",fin,"curve ≥ 50%")}${col("Migrated",mig,"left the curve")}</div></div>
+ <div class="row2" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)"><div class="card"><div class="ch">Smart money & wallet feed <span class="cnt">${(D.wallet_events||[]).length}</span><span class="r">🧠 smart · 🐋 large · ⚠️ dev sell · 📦 bundle</span></div><div class="tbl" style="max-height:330px">${ev}</div></div>
+ <div class="card"><div class="ch">Tracked wallets <span class="cnt">${W.tracked||0}</span><span class="r">${W.smart||0} smart · hit = token later ≥3x their buy · ${W.tokens_tracked||0} tokens re-priced</span></div><div class="tbl" style="max-height:330px"><table><tr><th>Wallet</th><th>Status</th><th>Hits/buys</th><th>Recent tokens</th><th>Seen</th></tr>${wt}</table></div></div></div>`;}
+function msgHTML(m,showSym){const c=ROLE[m.role]||"#888";return`<div class="msg"><div class="ra" style="background:${c};color:${ROLE_TX[m.role]||"#fff"}">${m.role[0]}</div><div class="bb"><div class="hd"><b style="color:${c}">${m.role}</b>${showSym&&m.symbol?`<span class="chip">${esc(m.symbol)}</span>`:""}<span class="tm">${tm(m.t)}</span></div><div class="tx">${esc(m.text)}</div></div></div>`;}
+function v3HTML(){const R=D.ready,P=D.perf,C=D.control||{};if(!R||!P)return"";
+ const fmtv=(c)=>{const v=c.value;if(v==null)return"–";if(c.key==="max_dd"||c.key==="uptime")return(v*100).toFixed(0)+"%";if(c.key==="min_days")return v.toFixed(1)+" d";if(c.key==="profit_factor")return v>=999?"∞":v.toFixed(2);if(c.key==="no_halt")return v?"ok":"AKTIV";if(typeof v==="number"&&["expectancy","expectancy_lb","last14"].includes(c.key))return sgn(v);return String(v);};
+ const chk=R.checks.map(c=>`<div style="display:flex;gap:8px;align-items:center;padding:3px 0"><span style="width:16px;color:${c.ok?"var(--gr)":"var(--rd)"}">${c.ok?"✓":"✗"}</span><span style="flex:1">${esc(c.label)}</span><b class="num">${fmtv(c)}</b></div>`).join("");
+ const brow=(name,b)=>b&&b.n?`<tr><td>${esc(name)}</td><td class="num">${b.n}</td><td class="num">${(b.win_rate*100).toFixed(0)}%</td><td class="num ${cls(b.pnl)}">${sgn(b.pnl)}</td><td class="num ${cls(b.avg)}">${sgn(b.avg)}</td><td class="num">${b.pf==null?"–":b.pf.toFixed(2)}</td></tr>`:"";
+ const grp=(title,obj)=>`<tr><th colspan=6 style="color:var(--tx)">${title}</th></tr>`+Object.entries(obj||{}).map(([k,b])=>brow(k,b)).join("");
+ const sh=(D.shadow||{})["60"]||{rows:[]};const shRows=sh.rows.filter(r=>r.n>=2).slice(0,24).map(r=>`<tr><td><span class="chip ${r.kind==="hard"?"c-r":r.kind==="soft"?"c-y":"c-b"}">${r.kind}</span> ${esc(r.rule)}</td><td class="num">${r.n}</td><td class="num ${cls(r.median)}">${r.median==null?"–":pct(r.median*100)}</td><td class="num up">${r.up50}</td><td class="num dn">${r.down50}${r.nq?` <span class="mu">(${r.nq} tot)</span>`:""}</td></tr>`).join("")||`<tr><td colspan=5 class="empty">sammelt noch Daten · jeder Kandidat wird 15/60/180 min später neu bepreist</td></tr>`;
+ const costs=P.costs||{};
+ return`<div class="row1">
+ <div class="card"><div class="ch">Go-live readiness <span class="cnt">${R.passed}/${R.total}</span><span class="r" style="color:${R.ready?"var(--gr)":"var(--rd)"}">${R.ready?"alle Kriterien erfüllt":"NICHT BEREIT für echtes Geld"}</span></div><div style="padding:8px 12px;font-size:12px">${chk}<div class="mu" style="margin-top:6px;font-size:11px">${esc(R.note)} Zählt seit ${dt(R.since)} (Regeln v3).</div></div></div>
+ <div class="card"><div class="ch">Performance nach Regel/Modus/Exit <span class="r">Kosten gesamt ${usd(costs.total)}${costs.pct_of_turnover!=null?` · ${(costs.pct_of_turnover*100).toFixed(1)}% vom Umsatz`:""}</span></div><div class="tbl" style="max-height:330px"><table><tr><th>Gruppe</th><th>N</th><th>Win</th><th>PnL</th><th>Ø/Trade</th><th>PF</th></tr>${grp("Regelversion",P.by_rules)}${grp("Modus",P.by_mode)}${grp("Exit-Grund",P.by_exit)}${grp("Stunde (Wien)",P.by_hour)}</table></div></div>
+ <div class="card"><div class="ch">Regel-Statistik (Schatten-Buch) <span class="cnt">${sh.n_scored}/${sh.n_tracked}</span><span class="r">Kurs 60 min nach der Entscheidung, ohne Kosten</span></div><div class="tbl" style="max-height:330px"><table><tr><th>Regel / Verdikt</th><th>N</th><th>Median</th><th>≥+50%</th><th>≤−50%</th></tr>${shRows}</table></div></div>
+ </div>`;}
+function render(){if(!D){document.getElementById("main").innerHTML='<div class="empty">no data yet</div>';return;}
+ const k=D.kpi,s=D.status,c=D.counters,now=Date.now()/1000,hbAge=s.heartbeat?now-s.heartbeat:1e9,alive=s.supervisor_alive&&hbAge<D.interval_s*2+60;
+ const stale=s.supervisor_alive&&!alive;
+ document.getElementById("top").innerHTML=`<div class="logo"><i></i>DESK</div><span class="badge b-paper">PAPER · SIMULATED</span>
+ <div class="kpi"><span class="l">Equity</span><span class="v big num">€${k.equity_eur.toFixed(2)} <span class="mu" style="font-size:12px">$${k.equity_usd.toFixed(2)}</span></span></div>
+ <div class="kpi"><span class="l">ROI</span><span class="v num ${cls(k.roi)}">${pct(k.roi,2)}</span></div><div class="sep"></div>
+ <div class="kpi"><span class="l">Cash</span><span class="v num">${usd(k.cash)}</span></div>
+ <div class="kpi"><span class="l">Realized</span><span class="v num ${cls(k.realized)}">${sgn(k.realized)}</span></div>
+ <div class="kpi"><span class="l">Unrealized</span><span class="v num ${cls(k.unrealized)}">${sgn(k.unrealized)}</span></div>
+ <div class="kpi" title="swap ${usd(k.fees.swap,3)} · slippage ${usd(k.fees.slippage,3)} · network ${usd(k.fees.network,3)}"><span class="l">Costs paid</span><span class="v num dn">${usd(k.fees_total)}</span></div><div class="sep"></div>
+ <div class="kpi"><span class="l">Open</span><span class="v num">${D.positions.length}/${D.config.max_open}</span></div>
+ <div class="kpi"><span class="l">Trades</span><span class="v num">${c.buys}B / ${c.sells}S</span></div>
+ <div class="kpi"><span class="l">Cycles</span><span class="v num">${c.cycles}</span></div>
+ <div class="kpi"><span class="l">SOL</span><span class="v num">${k.sol_usd?"$"+(+k.sol_usd).toFixed(2):"–"}</span></div>
+ <div style="margin-left:auto" class="kpi"><span class="l">Bot</span><span class="v" style="color:${alive?"var(--gr)":stale?"var(--yl)":"var(--rd)"}"><span class="dot"></span>${alive?"LIVE (paper)":stale?"STALLED":"STOPPED"}${s.halted?" · HALTED":""}${D.control&&D.control.paused?" · PAUSED":""}${D.control&&D.control.killed?" · KILL-SWITCH":""}</span></div>${D.control&&D.control.url?`<div class="kpi"><span class="l">Steuerung</span><span class="v"><a href="${esc(D.control.url)}" target="_blank" rel="noopener" style="color:#9b7bff">öffnen ↗</a></span></div>`:""}
+ <div class="kpi"><span class="l">Last update</span><span class="v num" style="font-size:12px">${tm(s.last_cycle)} <span class="mu">(${Math.round(hbAge)}s)</span></span></div>`;
+ const st=D.stats,v=st.verdicts,tot=(v.APPROVED||0)+(v.WAIT||0)+(v.BLOCKED||0)||1,api=st.api||{},xp=st.x_probe||{};
+ const scan=(D.scan&&D.scan.pools)||[];const F=UI.scanF;
+ const scanRows=scan.filter(r=>F==="all"||(F==="pass"?!(r.status||"").startsWith("filtered"):F==="flag"?(r.status||"").startsWith("flagged"):true)).sort((a,b)=>(a.age_min??1e9)-(b.age_min??1e9));
+ const flagged=(D.candidates||[]).slice(0,60);
+ const decided=[...(D.candidates||[]),...(D.legacy||[])].sort((a,b)=>b.t-a.t).slice(0,90);
+ const pos=D.positions.map(p=>{const chg=p.last_price/p.entry_price-1,pnl=p.value+p.proceeds-p.cost_total;return`<tr><td><b>${esc(p.symbol)}</b> <span class="mu">${esc(p.dex)}</span></td><td class="num">${px(p.entry_price)}</td><td class="num">${px(p.last_price)}</td><td class="num dn">${px(p.cur_stop||p.stop)}</td><td class="num up">${px(p.target)}</td><td class="num">${usd(p.cost_total)}</td><td class="num">${usd(p.value)}</td><td class="num ${cls(pnl)}">${sgn(pnl)} <span>${pct(chg*100)}</span></td><td class="num">${age((now-p.entry_time)/60)}</td><td>${p.tp_done?'<span class="chip c-g">yes</span>':'<span class="chip">no</span>'}</td><td>${links(p.pool,p.mint)}</td></tr>`;}).join("")||`<tr><td colspan=11 class="empty">no open positions · Chief buys only after Skeptic APPROVES</td></tr>`;
+ const fills=(D.fills||[]).map(f=>`<tr><td class="num mu">${dt(f.t)}</td><td><span class="chip ${f.side==="BUY"?"c-b":"c-y"}">${f.side}</span></td><td><b>${esc(f.symbol)}</b></td><td class="num">${usd(f.usd)}</td><td class="num">${px(f.ref_price)} → ${px(f.fill)}</td><td class="num mu">${f.fee==null?"–":usd((f.fee||0)+(f.slip_usd||0)+(f.net||0),3)}</td><td class="num ${cls(f.pnl)}">${f.pnl==null?"":sgn(f.pnl)}</td><td class="wrap">${esc(f.reason)}</td></tr>`).join("")||`<tr><td colspan=8 class="empty">no fills yet</td></tr>`;
+ const debates=(D.debates||[]).map((d,i)=>{const id=d.mint+":"+d.cycle;const open=UI.open[id]??(i===0);const roles=[...new Set(d.msgs.map(m=>m.role))];
+  return`<details class="deb" data-id="${esc(id)}" ${open?"open":""}><summary>${avatar(d.symbol,d.mint)}<b>${esc(d.symbol)}</b><span class="mu">cycle ${d.cycle} · ${dt(d.t)}</span><span class="pill">${roles.map(r=>`<span style="color:${ROLE[r]}">●</span>`).join("")} ${d.msgs.length} msgs</span><span style="margin-left:auto" class="verdict v-${d.verdict}">${d.verdict||"?"}</span></summary><div class="body">${d.msgs.map(m=>msgHTML(m,false)).join("")}${links(null,d.mint)}</div></details>`;}).join("")||`<div class="empty">no debates yet</div>`;
+ const sortedApi=[["GeckoTerminal calls",api.gt_calls],["GeckoTerminal 429 (rate limit)",api.gt_429],["DexScreener calls",api.ds_calls],["RugCheck calls",api.rc_calls],["RugCheck failures",api.rc_fail],["Network errors",api.errors]];
+ document.getElementById("main").innerHTML=`
+ <div class="row1">
+  <div class="card" id="eq"><div class="ch">Equity curve <span class="cnt">${(D.equity||[]).length} pts</span><span class="r"><span style="color:#4c8dff">●</span> buy <span style="color:#f5b941">●</span> sell · start €${(k.start_usd/k.eur_usd).toFixed(2)} · since ${dt(s.started_at)}</span></div><div id="eqsvg"></div></div>
+  <div class="card"><div class="ch">Desk stats</div><div class="stats">
+   <div class="stat"><div class="l">Flagged</div><div class="v num">${c.flagged}</div></div>
+   <div class="stat"><div class="l">Win rate</div><div class="v num">${st.win_rate==null?"–":st.win_rate.toFixed(0)+"%"} <span class="mu" style="font-size:11px">${st.wins}/${st.closed}</span></div></div>
+   <div class="stat" style="grid-column:1/3"><div class="l">Skeptic verdicts</div><div style="font-size:12px;margin-top:2px;white-space:nowrap"><span class="up">✓ ${v.APPROVED||0} approved</span>&nbsp; <span style="color:var(--yl)">⏸ ${v.WAIT||0} wait</span>&nbsp; <span class="dn">⛔ ${v.BLOCKED||0} blocked</span></div>
+    <div class="bar"><div style="width:${(v.APPROVED||0)/tot*100}%;background:var(--gr)"></div><div style="width:${(v.WAIT||0)/tot*100}%;background:var(--yl)"></div><div style="width:${(v.BLOCKED||0)/tot*100}%;background:var(--rd)"></div></div></div>
+   <div class="stat"><div class="l">Best / worst</div><div class="v num" style="font-size:13px;white-space:nowrap"><span class="up">${st.best==null?"–":sgn(st.best)}</span> / <span class="dn">${st.worst==null?"–":sgn(st.worst)}</span></div></div>
+   <div class="stat"><div class="l">Pools scanned</div><div class="v num">${(c.pools_scanned||0).toLocaleString()}</div></div></div>
+   <div class="ch" style="border-top:1px solid var(--bd)">Top block reasons</div><div class="reasons">${st.block_reasons.map(([r,n])=>`<div><span title="${esc(r)}">${esc(r)}</span><b class="num">${n}</b></div>`).join("")||'<div class="mu">none yet</div>'}</div>
+   <div class="ch" style="border-top:1px solid var(--bd)">Top Skeptic concerns</div><div class="reasons">${st.soft_reasons.map(([r,n])=>`<div><span title="${esc(r)}">${esc(r)}</span><b class="num">${n}</b></div>`).join("")||'<div class="mu">none recorded yet</div>'}</div></div>
+  <div class="card"><div class="ch">Data sources &amp; health <span class="r">since last restart</span></div><div class="health">
+   ${sortedApi.map(([n,x])=>`<div><span class="mu">${n}</span><b class="num ${/429|fail|error/i.test(n)&&x>0?"dn":""}">${x??0}</b></div>`).join("")}
+   <div><span class="mu">X / Twitter search</span><b class="${xp.usable?"up":"dn"}">${xp.usable?"reachable":"unavailable"}</b></div>
+   <div class="dim" style="display:block;font-size:10.5px">${Object.entries(xp).filter(([a])=>a!=="usable").map(([a,b])=>esc(a)+": "+esc(b)).join(" · ")}</div>
+   <div><span class="mu">Sticky blocklist (24h)</span><b class="num">${st.blocklist}</b></div><div><span class="mu">Supervisor restarts</span><b class="num">${s.restarts}</b></div>
+   <div style="display:block;border-top:1px solid var(--bd);padding-top:6px;margin-top:2px;font-size:11px;line-height:1.55" class="mu">
+   <b style="color:${ROLE.Scout}">Scout</b> GeckoTerminal new+trending, DexScreener profiles/boosts<br>
+   <b style="color:${ROLE.News}">News</b> CoinGecko trending, DexScreener orders/boosts, graduation watchlist<br>
+   <b style="color:${ROLE.Sentiment}">Sentiment</b> GT txns/traders, DexScreener socials/boosts, CoinGecko · no X data<br>
+   <b style="color:${ROLE["Live Scout"]}">Live Scout</b> RugCheck new-token feed, DexScreener curve stats · livestreams blocked<br><b style="color:${ROLE.Wallets}">Wallets</b> GeckoTerminal trades (wallets), RugCheck dev/insider networks, learned smart wallets<br><b style="color:${ROLE.Charts}">Charts</b> GeckoTerminal 5m/1m OHLCV<br><b style="color:${ROLE.Skeptic}">Skeptic</b> RugCheck + desk outputs<br>
+   <b style="color:#e6e8ee">Chief</b> simulated fills, GT quotes · rules: min R:R ${D.config.min_rr}, stop ≥ -${D.config.hard_stop*100}%, trail ${D.config.trail*100}%, max hold ${D.config.max_hold_h}h, daily loss ${D.config.daily_loss*100}%</div></div></div>
+ </div>
+ ${v3HTML()}
+ ${radarHTML()}
+ <div class="cols">
+  <div class="card col"><div class="ch">Scanned <span class="cnt">${scanRows.length}/${scan.length}</span><span class="r filt"><button data-f="all" class="${F==="all"?"on":""}">All</button><button data-f="pass" class="${F==="pass"?"on":""}">Passed</button><button data-f="flag" class="${F==="flag"?"on":""}">Flagged</button></span></div><div class="list" data-s="scan">${scanRows.map(r=>tokCard(r,"scan")).join("")||'<div class="empty">waiting for next scan</div>'}</div></div>
+  <div class="card col"><div class="ch">Flagged by Scout <span class="cnt">${flagged.length}</span><span class="r">vol ≥ ${D.config.min_vol_spike}x avg · analysed by all 6</span></div><div class="list" data-s="flag">${flagged.map(r=>tokCard(r,"flag")).join("")||'<div class="empty">nothing flagged since dashboard start</div>'}</div></div>
+  <div class="card col"><div class="ch">Decisions <span class="cnt">${decided.length}</span><span class="r"><span class="up">✓${v.APPROVED||0}</span> <span style="color:var(--yl)">⏸${v.WAIT||0}</span> <span class="dn">⛔${v.BLOCKED||0}</span></span></div><div class="list" data-s="dec">${decided.map(r=>tokCard(r,"dec")).join("")||'<div class="empty">no decisions yet</div>'}</div></div>
+ </div>
+ <div class="card"><div class="ch">Open positions <span class="cnt">${D.positions.length}</span><span class="r">simulated · exits v3: stop → break-even after +1R → TP ladder → tightening trail → time stop / max hold / rug exit / red flag</span></div><div class="tbl"><table><tr><th>Token</th><th>Entry</th><th>Current</th><th>Stop</th><th>Target</th><th>Size</th><th>Value</th><th>PnL</th><th>Held</th><th>TP hit</th><th>Links</th></tr>${pos}</table></div></div>
+ <div class="row2">
+  <div class="card"><div class="ch">Trade history · all fills <span class="cnt">${(D.fills||[]).length}</span><span class="r">costs = swap fee + slippage + network</span></div><div class="tbl"><table><tr><th>Time</th><th>Side</th><th>Token</th><th>USD</th><th>Ref → fill</th><th>Costs</th><th>PnL</th><th>Reason</th></tr>${fills}</table></div></div>
+  <div class="card"><div class="ch">Debates · full desk conversation per token <span class="cnt">${(D.debates||[]).length}</span><span class="r">click to expand</span></div><div class="tbl" style="max-height:420px" data-s="deb">${debates}</div></div>
+ </div>`;
+ const eqd=document.getElementById("eqsvg");eqd.innerHTML=eqChart(eqd.clientWidth);
+ document.getElementById("legend").innerHTML=Object.entries(ROLE).filter(([r])=>r!=="Desk").map(([r,c])=>`<span style="color:${c}">● ${r}</span>`).join("");
+ const ch=document.getElementById("chat");ch.innerHTML=(D.chat||[]).map(m=>msgHTML(m,true)).join("");document.getElementById("chatcnt").textContent=(D.chat||[]).length;ch.scrollTop=ch.scrollHeight;
+ document.querySelectorAll(".filt button").forEach(b=>b.onclick=()=>{UI.scanF=b.dataset.f;save();render();});
+ document.querySelectorAll("details.deb").forEach(d=>d.ontoggle=()=>{UI.open[d.dataset.id]=d.open;save();});
+ document.querySelectorAll("[data-s]").forEach(e=>{if(UI.scroll[e.dataset.s])e.scrollTop=UI.scroll[e.dataset.s];e.onscroll=()=>{UI.scroll[e.dataset.s]=e.scrollTop;};});
+ const m=document.getElementById("main");if(UI.scroll.main)m.scrollTop=UI.scroll.main;m.onscroll=()=>{UI.scroll.main=m.scrollTop;};}
+function save(){sessionStorage.setItem("deskUI",JSON.stringify(UI));}
+render();
+let _rw;window.addEventListener("resize",()=>{clearTimeout(_rw);_rw=setTimeout(()=>{const e=document.getElementById("eqsvg");if(e)e.innerHTML=eqChart(e.clientWidth);},150);});
+// refresh: poll dashboard.json when served over http; on file:// reload the page (UI state kept in sessionStorage)
+const PUB_RAW="https://raw.githubusercontent.com/Jdhevdu/vw-kyhrvmtscjpdiiqo/main/dashboard.json";function fmtVienna(ts){if(!ts)return "–";const ms=ts>1e12?ts:ts*1000;const fmt=new Intl.DateTimeFormat("de-AT",{timeZone:"Europe/Vienna",weekday:"short",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit"});return fmt.format(new Date(ms))+" (Europe/Vienna)";}function updatePubBar(){const el=document.getElementById("pubbar");if(!el)return;const ts=D&&(D.generated||(D.status&&D.status.heartbeat));const age=ts?(Date.now()/1000-(ts>1e12?ts/1000:ts)):1e9;const interval=(D&&D.interval_s)?D.interval_s:120;const stale=age>interval*2+60;el.className=stale?"stale":"ok";const stand=fmtVienna(ts);let ageTxt="keine Daten";if(ts){if(age<90)ageTxt=Math.round(age)+"s";else if(age<3600)ageTxt=Math.round(age/60)+" Min.";else ageTxt=Math.round(age/3600)+" Std.";}el.innerHTML=stale?`<span class="tag stale">VERALTET</span><span>Letzter Stand: ${stand} (vor ${ageTxt}). Der Computer schläft oder die Übertragung ist gestoppt. Angezeigt wird der letzte Snapshot.</span>`:`<span class="tag ok">LIVE</span><span>Stand: ${stand} · aktualisiert vor ${ageTxt} · nur Spielgeld, keine Finanzberatung · <a href="chat.html" style="color:#9b7bff;text-decoration:underline">Chat</a>${D&&D.control&&D.control.url?` · <a href="control.html" style="color:#16c784;text-decoration:underline">Steuerung (Login)</a>`:""}</span>`;}async function fetchDashboard(){const qs="?"+Date.now();try{const r=await fetch("dashboard.json"+qs,{cache:"no-store"});if(r.ok)return await r.json();}catch(e){}return null;}async function poll(){try{const j=await fetchDashboard();if(j&&(!D||j.generated!==D.generated)){D=j;render();}updatePubBar();}catch(e){updatePubBar();if(location.protocol==="file:"){save();location.reload();}}}
+setInterval(poll,location.protocol==="file:"?30000:10000);
+setInterval(()=>{updatePubBar();if(D){const s=D.status;const el=document.querySelector("#top .kpi:last-child .v .mu");if(el&&s.heartbeat)el.textContent="("+Math.round(Date.now()/1000-s.heartbeat)+"s)";}},1000);updatePubBar();poll();
+window.addEventListener("beforeunload",save);
+</script></body></html>
